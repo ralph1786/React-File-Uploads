@@ -7,7 +7,7 @@ function FileUpload() {
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("Choose File");
   const [uploadedFile, setUploadedFile] = useState({});
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const onChange = e => {
@@ -39,19 +39,22 @@ function FileUpload() {
       );
       const { fileName, filePath } = response.data;
       setUploadedFile({ fileName, filePath });
-      setMessage("File Successfully Uploaded");
+      setMessage({ message: "File Successfully Uploaded", error: false });
     } catch (error) {
       if (error.response.status === 500) {
-        setMessage("there was a problem with the server");
+        setMessage({
+          message: "There was a problem with the server",
+          error: true
+        });
       } else {
-        setMessage(error.response.data.message);
+        setMessage({ message: error.response.data.message, error: true });
       }
     }
   };
 
   return (
     <Fragment>
-      {message ? <Message message={message} /> : null}
+      {message.message ? <Message message={message} /> : null}
       <form onSubmit={onSubmit}>
         <div className="custom-file mb-4">
           <input
@@ -64,7 +67,7 @@ function FileUpload() {
             {fileName}
           </label>
         </div>
-        <ProgressBar percentage={uploadPercentage} />
+        {message.error ? null : <ProgressBar percentage={uploadPercentage} />}
         <input
           type="submit"
           value="Upload"

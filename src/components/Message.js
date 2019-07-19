@@ -4,10 +4,12 @@ import PropTypes from "prop-types";
 function Message({ message }) {
   return (
     <div
-      className="alert alert-warning alert-dismissible fade show"
+      className={`alert alert-${
+        message.error ? "danger" : "success"
+      } alert-dismissible fade show`}
       role="alert"
     >
-      <strong>{message}</strong>
+      <strong>{message.message}</strong>
       <button
         type="button"
         className="close"
@@ -21,7 +23,7 @@ function Message({ message }) {
 }
 
 Message.propTypes = {
-  message: PropTypes.string.isRequired
+  message: PropTypes.object.isRequired
 };
 
 export default Message;
